@@ -35,30 +35,21 @@ impl Shape {
 
 #[derive(Debug)]
 struct Round {
-    mine: Shape,
+    opponent: Shape,
     response: Shape,
 }
 
 impl Round {
     fn score(&self) -> u32 {
-        let points = if self.mine > self.response {
+        let points = if self.response> self.opponent {
             6
-        } else if self.mine == self.response {
+        } else if self.opponent == self.response {
             3
         } else {
             0
         };
 
-        let result = points + self.mine.value();
-        println!(
-            "hand value {:?} {}  vs {:?} score: {} total {}",
-            self.mine,
-            self.mine.value(),
-            self.response,
-            points,
-            result
-        );
-        result
+        points + self.response.value()
     }
 }
 
@@ -67,7 +58,7 @@ pub fn part_one(input: &str) -> Option<u32> {
         .lines()
         .map(|l| l.as_bytes())
         .map(|t| Round {
-            mine: match t[0] {
+            opponent: match t[0] {
                 b'A' => Shape::Rock,
                 b'B' => Shape::Paper,
                 b'C' => Shape::Scissor,
@@ -100,18 +91,6 @@ mod tests {
 
     #[test]
     fn test_part_one() {
-        assert!(Shape::Rock > Shape::Scissor);
-        assert!(Shape::Scissor < Shape::Rock);
-
-        assert!(Shape::Paper > Shape::Rock);
-        assert!(Shape::Rock < Shape::Paper);
-
-        assert!(Shape::Scissor > Shape::Paper);
-        assert!(Shape::Paper < Shape::Scissor);
-
-        assert!(Shape::Scissor == Shape::Scissor);
-        assert!(Shape::Rock == Shape::Rock);
-        assert!(Shape::Paper == Shape::Paper);
         let input = aoc::read_file("examples", 2);
         assert_eq!(part_one(&input), Some(15));
     }
